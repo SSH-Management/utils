@@ -16,3 +16,4 @@
 test-logs/
 .vscode/
 .idea/
+coverage.txt
