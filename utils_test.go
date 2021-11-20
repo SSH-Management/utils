@@ -2,7 +2,6 @@ package utils
 
 import (
 	"os"
-	"path/filepath"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -29,23 +28,6 @@ func TestIsSuccess(t *testing.T) {
 	for _, item := range data {
 		assert.Equal(item.Expected, IsSuccess(item.Value))
 	}
-}
-
-func TestCreateLogFile(t *testing.T) {
-	t.Parallel()
-	assert := require.New(t)
-
-	path := "./test-logs/log.json"
-
-	file, err := CreateLogFile(path, 0777)
-
-	assert.NoError(err)
-	assert.NotNil(file)
-	assert.FileExists(path)
-
-	os.RemoveAll(path)
-	full, _ := filepath.Abs(path)
-	os.Remove(full)
 }
 
 func TestUnsafeBytes(t *testing.T) {
@@ -94,5 +76,22 @@ func TestGetenv(t *testing.T) {
 		value = Getenv("HELLO_ENV", "hello_world")
 		assert.NotEmpty(value)
 		assert.Equal("value", value)
+	})
+}
+
+func TestIsInt(t *testing.T) {
+	t.Parallel()
+	assert := require.New(t)
+
+	t.Run("IsInt", func(t *testing.T) {
+		assert.True(IsInt("23445555"))
+	})
+
+	t.Run("NotAnInt", func(t *testing.T) {
+		assert.False(IsInt("fjkhadskjdfhasjd"))
+	})
+
+	t.Run("CannotStartWith0", func(t *testing.T) {
+		assert.False(IsInt("023355"))
 	})
 }
